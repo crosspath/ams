@@ -1,0 +1,38 @@
+---
+- cmd: help
+  text: "Show help message about supported commands."
+- cmd: ["init", "init DIRECTORY_PATH"]
+  text: "Create configuration files in current directory or in DIRECTORY_PATH."
+- cmd: sources
+  children:
+    - cmd: "add DIRECTORY REPO BRANCH"
+      text: "Add git submodule into DIRECTORY from REPO and track BRANCH by default."
+    - cmd: "delete DIRECTORY"
+      text: "Delete git submodule from DIRECTORY."
+    - cmd: ["update", "update DIRECTORY ..."]
+      text: >
+        Update git submodule from upstream in DIRECTORY or in all git submodules if DIRECTORY
+        is not specified. You may pass one or more directory paths (DIRECTORY ...) to update
+        their contents.
+- cmd: works
+  children:
+    - cmd: covered
+      text: "List files of sources which have been used for published works."
+    - cmd: ignored
+      text: "List ignored files."
+    - cmd: outdated
+      text: "List documents which may contain outdated information."
+    - cmd: ["publish DOCUMENT", "publish DOCUMENT FILE_PATH ..."]
+      text:
+        - >
+          Save record about abstract (DOCUMENT) and pass list of file paths of sources
+          (FILE_PATH ...) which relate to this abstract. You should prepend minus sign to file path
+          to exclude it from list of related sources. Examples:
+        - >
+          works publish _/docker/compose.md docs.docker.com/content/manuals/compose/**/*.md
+        - >
+          works publish _/docker/compose.md -docs.docker.com/**/*.md
+    - cmd: uncovered
+      text: "List files of sources which have NOT been used for published works."
+    - cmd: unknown
+      text: "List files of sources which may be used for works or ignored."
