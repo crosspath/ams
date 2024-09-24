@@ -5,28 +5,49 @@ module Skap
     include Command
     extend self
 
-    NO_ARGS = %w[covered ignored outdated uncovered unknown].freeze
-
     # @param command [String]
     # @param args [Array<String>]
     # @return [void]
     def start(command, args)
       assert_cwd
-      assert_empty_options(args) if NO_ARGS.include?(command)
 
       case command
-      when "covered" then covered
-      when "ignored" then ignored
+      when "covered" then covered(*args)
+      when "ignored" then ignored(*args)
       when "publish" then publish(*args)
-      when "outdated" then outdated
-      when "uncovered" then uncovered
-      when "unknown" then unknown
+      when "outdated" then outdated(*args)
+      when "uncovered" then uncovered(*args)
+      when "unknown" then unknown(*args)
       else
         raise ArgumentError, "Unknown command: #{command}"
       end
     end
 
     private
+
+    # @param path_patterns_as_hash [Hash<String, Array<String>>]
+    # @return [Array<String>]
+    def collect_files(path_patterns_as_hash)
+      path_patterns_as_array =
+        path_patterns_as_hash.flat_map { |dir, paths| paths.map { |x| File.join(dir, x) } }
+
+      path_patterns_as_array.flat_map do |path_pattern|
+        if path_pattern.include?("*")
+          result = Dir.glob(path_pattern, base: CURRENT_DIR)
+          if result.empty?
+            raise ArgumentError, "No files found for path pattern \"#{path_pattern}\""
+          end
+
+          result
+        else
+          if !File.exist?(path_pattern)
+            raise ArgumentError, "File \"#{path_pattern}\" doesn't exist"
+          end
+
+          path_pattern
+        end
+      end
+    end
 
     # @param path [String]
     # @return [String]
@@ -36,33 +57,28 @@ module Skap
       shell("git rev-parse HEAD -- #{file}", dir:).split("\n").first
     end
 
+    # @param dirs [Array<String>]
     # @return [void]
-    def covered
-      sources = extract_from_sources("indexed")
+    def covered(*dirs)
+      sources = Files::Sources.new.extract("indexed", dirs)
 
-      puts (covered_sources & collect_files(sources)).sort
+      puts (Files::Versions.new.covered_sources & collect_files(sources)).sort
     end
 
+    # @param dirs [Array<String>]
     # @return [void]
-    def ignored
-      sources = extract_from_sources("ignored")
+    def ignored(*dirs)
+      sources = Files::Sources.new.extract("ignored", dirs)
 
       puts collect_files(sources).sort
     end
 
+    # @param dirs [Array<String>]
     # @return [void]
-    def outdated
-      sources_sha = {}
-      versions = load_file(VERSIONS)
-
+    def outdated(*dirs)
       outdated_documents =
-        versions.filter_map do |doc_path, hash|
-          outdated_sources =
-            hash["sources"].filter_map do |source_path, source_data|
-              sources_sha[source_path] ||= commit_sha(source_path)
-              source_path if sources_sha[source_path] != source_data["sha"]
-            end
-          [doc_path, outdated_sources] if !outdated_sources.empty?
+        Files::Versions.new.outdated_documents do |source_path|
+          dirs.empty? || source_path.start_with?(*dirs) ? commit_sha(source_path) : nil
         end
 
       outdated_documents.each do |(doc_path, outdated_sources)|
@@ -79,10 +95,9 @@ module Skap
 
       excluded_file_paths.map! { |x| x[1..] }
 
-      versions = load_file(VERSIONS)
+      versions = Files::Versions.new
       today = Time.now.strftime("%F")
-
-      doc = (versions[document_path] ||= {})
+      doc = versions.find_document(document_path) || {}
 
       doc["date"] = today
       doc["sources"] ||= {}
@@ -95,31 +110,32 @@ module Skap
 
       excluded_file_paths.each { |x| doc["sources"].delete(x) }
 
-      versions = versions.sort_by(&:first).to_h
-      File.write(VERSIONS, Psych.dump(versions, line_width: 100))
+      versions.add_document(document_path, doc)
 
-      puts "Version updated for #{document_path} in #{VERSIONS}"
+      puts "Version updated for #{document_path} in #{Files::Versions.file_name}"
     end
 
+    # @param dirs [Array<String>]
     # @return [void]
-    def uncovered
-      sources = extract_from_sources("indexed")
+    def uncovered(*dirs)
+      sources = Files::Sources.new.extract("indexed", dirs)
 
-      puts (collect_files(sources) - covered_sources.to_a).sort
+      puts (collect_files(sources) - Files::Versions.new.covered_sources.to_a).sort
     end
 
+    # @param dirs [Array<String>]
     # @return [void]
-    def unknown
-      sources_data = load_file(SOURCES)
+    def unknown(*dirs)
+      sources_data = Files::Sources.new
+      sources_data.select_directories!(dirs) if !dirs.empty?
 
-      search_patterns =
-        extract_from_sources("file-extensions", sources_data).transform_values { |v| v.join(",") }
+      search_patterns = sources_data.extract("file-extensions").transform_values { |v| v.join(",") }
 
       all_files =
         search_patterns.reduce([]) { |a, (dir, ext)| a + Dir.glob("#{dir}/**/*.{#{ext}}") }
 
-      ignored_files = collect_files(extract_from_sources("ignored", sources_data))
-      indexed_files = collect_files(extract_from_sources("indexed", sources_data))
+      ignored_files = collect_files(sources_data.extract("ignored"))
+      indexed_files = collect_files(sources_data.extract("indexed"))
 
       puts (all_files - ignored_files - indexed_files).sort
     end

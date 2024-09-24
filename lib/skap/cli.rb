@@ -6,6 +6,11 @@ require "io/console"
 require "psych"
 
 require_relative "command"
+require_relative "yaml_file"
+
+require_relative "files/menu"
+require_relative "files/sources"
+require_relative "files/versions"
 
 module Skap
   module CLI

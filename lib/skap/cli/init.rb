@@ -14,8 +14,8 @@ module Skap
       FileUtils.mkdir_p(dir)
 
       shell("git init", dir:)
-      shell("echo '---\n' > #{SOURCES}", dir:)
-      shell("echo '---\n' > #{VERSIONS}", dir:)
+      shell("echo '---\n' > #{Files::Sources.file_name}", dir:)
+      shell("echo '---\n' > #{Files::Versions.file_name}", dir:)
 
       puts "Git repo initialized in #{dir}"
     end

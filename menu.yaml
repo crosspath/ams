@@ -16,12 +16,18 @@
         their contents.
 - cmd: works
   children:
-    - cmd: covered
-      text: "List files of sources which have been used for published works."
-    - cmd: ignored
-      text: "List ignored files."
-    - cmd: outdated
-      text: "List documents which may contain outdated information."
+    - cmd: ["covered", "covered DIRECTORY ..."]
+      text: >
+        List files of sources which have been used for published works. Pass one or more directory
+        paths (DIRECTORY ...) to show files only in these directories.
+    - cmd: ["ignored", "ignored DIRECTORY ..."]
+      text: >
+        List ignored files. Pass one or more directory paths (DIRECTORY ...) to show files only in
+        these directories.
+    - cmd: ["outdated", "outdated DIRECTORY ..."]
+      text: >
+        List documents which may contain outdated information. Pass one or more directory paths
+        (DIRECTORY ...) to show files only in these directories.
     - cmd: ["publish DOCUMENT", "publish DOCUMENT FILE_PATH ..."]
       text:
         - >
@@ -32,7 +38,11 @@
           works publish _/docker/compose.md docs.docker.com/content/manuals/compose/**/*.md
         - >
           works publish _/docker/compose.md -docs.docker.com/**/*.md
-    - cmd: uncovered
-      text: "List files of sources which have NOT been used for published works."
-    - cmd: unknown
-      text: "List files of sources which may be used for works or ignored."
+    - cmd: ["uncovered", "uncovered DIRECTORY ..."]
+      text: >
+        List files of sources which have NOT been used for published works. Pass one or more
+        directory paths (DIRECTORY ...) to show files only in these directories.
+    - cmd: ["unknown", "unknown DIRECTORY ..."]
+      text: >
+        List files of sources which may be used for works or ignored. Pass one or more directory
+        paths (DIRECTORY ...) to show files only in these directories.
