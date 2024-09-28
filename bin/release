@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/skap/version"
+
+file = "skap-#{Skap::VERSION}.gem"
+warn "File #{file} doesn't exist" unless File.exist?(file)
+
+if system("gem push #{file}")
+  system("git tag 'v#{Skap::VERSION}' && git push origin 'v#{Skap::VERSION}' && git push")
+end

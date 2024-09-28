@@ -109,3 +109,30 @@ _/docker/overview.md:
       date: 2024-12-31
       sha: fc77b05ffe69070796a6a8630802e62b75304455
 ```
+
+## Development
+
+Do it once — authorize on [rubygems](https://rubygems.org/) and then:
+
+```shell
+gem signin
+```
+
+Before release — apply suggestions from RuboCop, review them and commit or reject:
+
+```shell
+bin/rubocop -A --only Style/FrozenStringLiteralComment,Layout/EmptyLineAfterMagicComment
+bin/rubocop -a
+```
+
+Build `*.gem` file:
+
+```shell
+bin/build
+```
+
+Push gem file to rubygems registry and then send new version to github repository:
+
+```shell
+bin/release
+```

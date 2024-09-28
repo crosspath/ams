@@ -4,6 +4,7 @@ module Skap
   class YAMLFile
     class << self
       attr_accessor :file_name
+
       private :file_name=
     end
 

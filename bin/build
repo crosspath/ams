@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/skap/version"
+
+if system("gem build skap")
+  need_sudo = !File.writable?(Gem.paths.home)
+  system("#{need_sudo ? "sudo" : ""} gem install skap-#{Skap::VERSION}.gem")
+end
