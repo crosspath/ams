@@ -31,8 +31,8 @@
     - cmd: ["publish DOCUMENT", "publish DOCUMENT FILE_PATH ..."]
       text:
         - >
-          Save record about abstract (DOCUMENT) and pass list of file paths of sources
-          (FILE_PATH ...) which relate to this abstract. You should prepend minus sign to file path
+          Save record about work (DOCUMENT) and pass list of file paths of sources
+          (FILE_PATH ...) which relate to this work. You should prepend minus sign to file path
           to exclude it from list of related sources. Examples:
         - >
           works publish _/docker/compose.md docs.docker.com/content/manuals/compose/**/*.md

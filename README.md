@@ -12,9 +12,11 @@ of your works based on these source documents, for example abstracts.
 ```plain
 help
     Show help message about supported commands.
+
 init
 init DIRECTORY_PATH
     Create configuration files in current directory or in DIRECTORY_PATH.
+
 sources
     add DIRECTORY REPO BRANCH
         Add git submodule into DIRECTORY from REPO and track BRANCH by default.
@@ -22,27 +24,47 @@ sources
         Delete git submodule from DIRECTORY.
     update
     update DIRECTORY ...
-        Update git submodule from upstream in DIRECTORY or in all git submodules if DIRECTORY
-        is not specified. You may pass one or more directory paths (DIRECTORY ...) to update their
+        Update git submodule from upstream in DIRECTORY or in all git submodules if DIRECTORY is not
+        specified. You may pass one or more directory paths (DIRECTORY ...) to update their
         contents.
+
 works
     covered
-        List files of sources which have been used for published works.
+    covered DIRECTORY ...
+        List files of sources which have been used for published works. Pass one or more directory
+        paths (DIRECTORY ...) to show files only in these directories.
     ignored
-        List ignored files.
+    ignored DIRECTORY ...
+        List ignored files. Pass one or more directory paths (DIRECTORY ...) to show files only in
+        these directories.
     outdated
-        List documents which may contain outdated information.
+    outdated DIRECTORY ...
+        List documents which may contain outdated information. Pass one or more directory paths
+        (DIRECTORY ...) to show files only in these directories.
     publish DOCUMENT
     publish DOCUMENT FILE_PATH ...
-        Save record about abstract (DOCUMENT) and pass list of file paths of sources (FILE_PATH ...)
-        which relate to this abstract. You should prepend minus sign to file path to exclude it from
+        Save record about work (DOCUMENT) and pass list of file paths of sources (FILE_PATH ...)
+        which relate to this work. You should prepend minus sign to file path to exclude it from
         list of related sources. Examples:
         works publish _/docker/compose.md docs.docker.com/content/manuals/compose/**/*.md
         works publish _/docker/compose.md -docs.docker.com/**/*.md
     uncovered
-        List files of sources which have NOT been used for published works.
+    uncovered DIRECTORY ...
+        List files of sources which have NOT been used for published works. Pass one or more
+        directory paths (DIRECTORY ...) to show files only in these directories.
     unknown
-        List files of sources which may be used for works or ignored.
+    unknown DIRECTORY ...
+        List files of sources which may be used for works or ignored. Pass one or more directory
+        paths (DIRECTORY ...) to show files only in these directories.
+```
+
+Examples:
+
+```shell
+skap help
+skap init
+skap sources add docker https://github.com/docker/docs.git main
+skap works unknown
 ```
 
 ## Suggested workflow

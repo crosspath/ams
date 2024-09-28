@@ -22,10 +22,7 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
 
-  spec.files =
-    Dir.chdir(File.expand_path(__dir__)) do
-      `git ls-files -z`.split("\x0").grep_v(%r{^spec/})
-    end
+  spec.files = %w[Gemfile menu.yaml skap.gemspec] + Dir.glob("{exe,lib}/**/*", base: __dir__)
 
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }

@@ -6,6 +6,7 @@ require "io/console"
 require "psych"
 
 require_relative "command"
+require_relative "string_utils"
 require_relative "yaml_file"
 
 require_relative "files/menu"
