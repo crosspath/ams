@@ -20,5 +20,10 @@ module Skap
     def load_file
       Psych.load_file(self.class.file_name, symbolize_names: false) || {}
     end
+
+    # @return [void]
+    def update_file
+      File.write(self.class.file_name, Psych.dump(file, line_width: 100))
+    end
   end
 end

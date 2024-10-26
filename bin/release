@@ -4,7 +4,7 @@
 require_relative "../lib/skap/version"
 
 file = "skap-#{Skap::VERSION}.gem"
-warn "File #{file} doesn't exist" unless File.exist?(file)
+warn "File #{file} doesn't exist" unless File.exist?(file) # rubocop:disable Lint/Debugger
 
 if system("gem push #{file}")
   system("git tag 'v#{Skap::VERSION}' && git push origin 'v#{Skap::VERSION}' && git push")

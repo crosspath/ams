@@ -21,10 +21,11 @@ module Skap
       section, command, *rest = argv
 
       case section
-      when "works" then CLI::Works.start(command, rest)
       when "help", "--help", "-h", nil then CLI::Help.start
       when "init" then CLI::Init.start(command, rest)
       when "sources" then CLI::Sources.start(command, rest)
+      when "version", "--version", "-v" then CLI::Version.start
+      when "works" then CLI::Works.start(command, rest)
       else
         raise ArgumentError, "Unknown section: #{section}"
       end
@@ -38,4 +39,5 @@ end
 require_relative "cli/help"
 require_relative "cli/init"
 require_relative "cli/sources"
+require_relative "cli/version"
 require_relative "cli/works"

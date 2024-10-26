@@ -12,7 +12,7 @@ module Skap
         file[document_path] = document
         @file = file.sort_by(&:first).to_h
 
-        File.write(self.class.file_name, Psych.dump(file, line_width: 100))
+        update_file
       end
 
       # @return [Set<String>]

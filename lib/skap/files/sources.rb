@@ -5,6 +5,22 @@ module Skap
     class Sources < YAMLFile
       self.file_name = "sources.yaml"
 
+      # @param dir [String]
+      # @return [void]
+      def add_source(dir)
+        file[dir] = {"file-extensions" => [], "ignored" => [], "indexed" => []}
+        @file = file.sort_by(&:first).to_h
+
+        update_file
+      end
+
+      # @param dir [String]
+      # @return [void]
+      def delete_source(dir)
+        file.delete(dir)
+        update_file
+      end
+
       # @param key [String]
       # @param dirs [Array<String>]
       # @return [Hash<String, Array<String>>]

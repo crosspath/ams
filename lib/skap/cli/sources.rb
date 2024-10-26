@@ -32,11 +32,7 @@ module Skap
 
       return unless shell("git submodule add -b #{branch} --depth 3 -- #{repo} #{dir}")
 
-      sources_data = load_file(SOURCES)
-      sources_data[dir] = {"file-extensions" => [], "ignored" => [], "indexed" => []}
-
-      sources_data = sources_data.sort_by(&:first).to_h
-      File.write(SOURCES, Psych.dump(sources_data, line_width: 100))
+      Files::Sources.new.add_source(dir)
     end
 
     # @param dir [String]
@@ -46,6 +42,8 @@ module Skap
       assert_empty_options(rest)
 
       shell("git submodule deinit -f -- #{dir} && git rm -f #{dir} && rm -rf .git/modules/#{dir}")
+
+      Files::Sources.new.delete_source(dir)
     end
 
     # @param dirs [Array<String>]
@@ -53,7 +51,12 @@ module Skap
     def update(*dirs)
       path_arg = dirs.empty? ? "" : "-- #{dirs.join(" ")}"
 
-      shell("git submodule update --checkout --single-branch --recursive #{path_arg}")
+      commands = [
+        "git submodule init",
+        "git submodule update --checkout --single-branch --recursive #{path_arg}",
+      ]
+
+      shell(commands.join(" && "))
     end
   end
 end

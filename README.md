@@ -11,6 +11,8 @@ of your works based on these source documents, for example abstracts.
 
 ```plain
 help
+--help
+-h
     Show help message about supported commands.
 
 init
@@ -27,6 +29,11 @@ sources
         Update git submodule from upstream in DIRECTORY or in all git submodules if DIRECTORY is not
         specified. You may pass one or more directory paths (DIRECTORY ...) to update their
         contents.
+
+version
+--version
+-v
+    Show program version
 
 works
     covered

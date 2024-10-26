@@ -1,5 +1,5 @@
 ---
-- cmd: help
+- cmd: ["help", "--help", "-h"]
   text: "Show help message about supported commands."
 - cmd: ["init", "init DIRECTORY_PATH"]
   text: "Create configuration files in current directory or in DIRECTORY_PATH."
@@ -14,6 +14,8 @@
         Update git submodule from upstream in DIRECTORY or in all git submodules if DIRECTORY
         is not specified. You may pass one or more directory paths (DIRECTORY ...) to update
         their contents.
+- cmd: ["version", "--version", "-v"]
+  text: "Show program version"
 - cmd: works
   children:
     - cmd: ["covered", "covered DIRECTORY ..."]
