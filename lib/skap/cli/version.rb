@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-module Skap
-  module CLI::Version
-    include Command
-    extend self
+# CLI command for showing Skap version.
+module Skap::CLI::Version
+  include Skap::Command
+  extend self
 
-    # @return [void]
-    def start
-      puts "Skap, v#{Skap::VERSION}"
-    end
+  # @return [void]
+  def start
+    puts "Skap, v#{Skap::VERSION}"
   end
 end

@@ -13,22 +13,21 @@ require_relative "files/menu"
 require_relative "files/sources"
 require_relative "files/versions"
 
-module Skap
-  module CLI
-    # @param argv [Array<String>]
-    # @return [void]
-    def self.start(argv = ARGV)
-      section, command, *rest = argv
+# Dispatcher for CLI commands.
+module Skap::CLI
+  # @param argv [Array<String>]
+  # @return [void]
+  def self.start(argv = ARGV)
+    section, command, *rest = argv
 
-      case section
-      when "help", "--help", "-h", nil then CLI::Help.start
-      when "init" then CLI::Init.start(command, rest)
-      when "sources" then CLI::Sources.start(command, rest)
-      when "version", "--version", "-v" then CLI::Version.start
-      when "works" then CLI::Works.start(command, rest)
-      else
-        raise ArgumentError, "Unknown section: #{section}"
-      end
+    case section
+    when "help", "--help", "-h", nil then Skap::CLI::Help.start
+    when "init" then Skap::CLI::Init.start(command, rest)
+    when "sources" then Skap::CLI::Sources.start(command, rest)
+    when "version", "--version", "-v" then Skap::CLI::Version.start
+    when "works" then Skap::CLI::Works.start(command, rest)
+    else
+      raise ArgumentError, "Unknown section: #{section}"
     end
   end
 end

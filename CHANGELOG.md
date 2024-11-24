@@ -1,5 +1,10 @@
 # Changelog
 
+# 1.0.3
+
+Update dependencies.
+Add inline documentation.
+
 # 1.0.2
 
 Fixes for "sources" command.
